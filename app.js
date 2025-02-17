@@ -47,12 +47,13 @@ app.get('/integration.json', (req, res) => {
           "background_color": "#fff"
         },
         "is_active": true,
-        "integration_type": "modifier",
+        "integration_type": "output",
         "key_features": [
           "Notification",
           "communication",
           "prompt"
         ],
+        "integration_category": "Monitoring & Logging",
         "author": "Shy programmer",
         "settings": [
           {

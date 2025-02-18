@@ -114,9 +114,9 @@ app.get('/integration.json', (req, res) => {
 
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
-  const { message, channel } = req.body; // Extract message data
+  const { message, settings } = req.body; // Extract message data
 
-  if (!message) return res.status(400).send("No message received");
+  if (!message) return res.status(400).json({message: "No message received"});
 
   // Extract mentioned users
   const mentionedUsers = message.match(/@(\w+)/g) || [];
@@ -127,16 +127,16 @@ app.post("/telex-target", async (req, res) => {
 
     if (email) {
       await transporter.sendMail({
-        from: "your-email@gmail.com",
+        from: "earforsound@gmail.com",
         to: email,
-        subject: `You were mentioned in Telex channel: ${channel}`,
+        subject: `You were mentioned in a Telex channel`,
         text: `Message: ${message}`,
       });
       console.log(`Email sent to ${email}`);
     }
   }
 
-  res.send("Processed mentions successfully");
+  return res.json({status: "success", message: "Processed mentions successfully"});
 });
 
 // Start server

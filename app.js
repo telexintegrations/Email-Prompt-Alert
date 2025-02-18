@@ -138,7 +138,6 @@ app.post("/telex-target", async (req, res) => {
         else {
           console.log(`Email sent to ${email}`);
       }});
-      console.log(`Email sent to ${email}`);
     }
   }
 

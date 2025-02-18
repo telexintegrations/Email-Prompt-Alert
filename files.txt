@@ -1,3 +1,11 @@
+// tasks
+- remove tick url jare
+- create a ci/cd pipeline
+- set github secrets with mail and password
+- work on accessing these secrets in vs code too
+- work on automating aws with nginx or something
+
+
 // channel webhook 
 curl -X POST \
   "https://ping.telex.im/v1/webhooks/0195140d-b75e-7e81-ab25-d4d5be3a111c" \
@@ -9,6 +17,8 @@ curl -X POST \
     "status": "success",
     "username": "Email Prompt"
   }'
+
+
 
 
   //problems:

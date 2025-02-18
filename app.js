@@ -53,7 +53,7 @@ app.get('/integration.json', (req, res) => {
           "communication",
           "prompt"
         ],
-        "integration_category": "Monitoring & Logging",
+        "integration_category": "Communication & Collaboration",
         "author": "Shy programmer",
         "settings": [
           {
@@ -99,7 +99,6 @@ app.get('/integration.json', (req, res) => {
           }
         ],
         "target_url": "ec2-51-20-134-49.eu-north-1.compute.amazonaws/.com/telex-target",
-        "tick_url": "ec2-51-20-134-49.eu-north-1.compute.amazonaws.com/integration.json"
       }
     
   };

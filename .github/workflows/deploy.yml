@@ -17,5 +17,6 @@ jobs:
         username: ubuntu
         key: ${{ secrets.KEY }}
         script: |
+            cd telex-tester
             git pull origin main
             sudo systemctl restart myapp.service

@@ -19,10 +19,3 @@ jobs:
         script: |
             git pull origin main
             sudo systemctl restart myapp.service
-
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build project
-      run: npm run build

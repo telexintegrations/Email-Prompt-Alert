@@ -54,7 +54,13 @@ app.get('/integration.json', (req, res) => {
           "communication",
           "prompt"
         ],
-        "integration_category": "Communication & Collaboration",
+        "permissions": {
+          "monitoring_user": {
+            "always_online": true,
+            "display_name": "Email Prompt",
+          }
+        } ,
+        "integration_category": "Email & Messaging",
         "author": "Shy programmer",
         "settings": [
           {

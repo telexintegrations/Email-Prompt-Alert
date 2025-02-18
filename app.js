@@ -5,8 +5,9 @@ const bodyParser = require("body-parser");
 const axios = require("axios");
 const port = process.env.PORT || 3200;
 const cors = require("cors");
-
 const app = express();
+
+//Middlewares
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());

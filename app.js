@@ -131,7 +131,13 @@ app.post("/telex-target", async (req, res) => {
         to: email,
         subject: `You were mentioned in a Telex channel`,
         text: `Message: ${message}`,
-      });
+      }, (err, info) => {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          console.log(`Email sent to ${email}`);
+      }});
       console.log(`Email sent to ${email}`);
     }
   }

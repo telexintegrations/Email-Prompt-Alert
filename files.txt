@@ -1,5 +1,4 @@
 // tasks
-- remove tick url jare
 - create a ci/cd pipeline
 - set github secrets with mail and password
 - work on accessing these secrets in vs code too

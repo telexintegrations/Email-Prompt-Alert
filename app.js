@@ -129,12 +129,12 @@ app.route("/telex-target")
     
     if (email) {
       try {
-        log.message = email;
+        log.message = removeHtmlTags(message);
         let info = await transporter.sendMail({
           from: "earforsound@gmail.com",
           to: email,
           subject: `You were mentioned in a Telex channel`,
-          text: `Message: ${message}`,
+          text: `Message: ${removeHtmlTags(message)}`,
         });
         console.log(`Email sent to ${email}: ${info.response}`);
       } catch (err) {

@@ -43,7 +43,7 @@ app.get('/integration.json', (req, res) => {
           "background_color": "#fff"
         },
         "is_active": true,
-        "integration_type": "modifier",
+        "integration_type": "output",
         "key_features": [
           "Notification",
           "communication",
@@ -132,15 +132,14 @@ app.route("/telex-target")
       } catch (err) {
         console.error(`Error sending email to ${email}:`, err);
       }
-      return res.json({
-        status: "success", 
-        message: "Processed mentions successfully",
-        from: message,
-    });
     }
   }
 
-
+   return res.json({
+    status: "success", 
+    message: "Processed mentions successfully",
+    from: message,
+});
 })
 .get(async (req, res) => {
   const message = "hello @iamnotdavidoadeleke@gmail.com boy"

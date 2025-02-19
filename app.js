@@ -24,7 +24,9 @@ const transporter = nodemailer.createTransport({
 
 //testing server
 app.get('/', (req, res) => {
-  res.send(`Hello World! ${log}`)
+  res.json({
+    message: `Hello World!`,
+    new: log.message})
 })
 
 app.get('/integration.json', (req, res) => {

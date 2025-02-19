@@ -137,8 +137,7 @@ app.route("/telex-target")
 
    return res.json({
     status: "success", 
-    message: "Processed mentions successfully",
-    from: message,
+    message: message,
 });
 })
 .get(async (req, res) => {

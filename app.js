@@ -108,7 +108,8 @@ app.get('/integration.json', (req, res) => {
 });
 
 // Webhook endpoint to receive messages from Telex
-app.post("/telex-target", async (req, res) => {
+app.route("/telex-target")
+.post(async (req, res) => {
   const { message, settings } = req.body; // Extract message data
 
   if (!message) return res.status(400).json({message: "No message received"});
@@ -135,14 +136,48 @@ app.post("/telex-target", async (req, res) => {
     }
   }
 
-  return res.json({
+   res.json({
     status: "success", 
     message: "Processed mentions successfully",
     at: mentionedUsers,
     from: message,
     to: email,
 });
+})
+.get(async (req, res) => {
+  const message = "hello @iamnotdavidoadeleke@gmail.com boy"
+  const settings = "nil"
+
+  // Extract mentioned users
+  const mentionedUsers = message.match(/@(\w+)/g) || [];
+  
+  for (let mention of mentionedUsers) {
+    const email = mention.replace("@", "");
+
+    if (email) {
+      await transporter.sendMail({
+        from: "earforsound@gmail.com",
+        to: email,
+        subject: `You were mentioned in a Telex channel`,
+        text: `Message: ${message}`,
+      }, (err, info) => {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          console.log(`Email sent to ${email}`);
+      }});
+    }
+  }
+
+  res.json({
+    status: "success", 
+    message: "Processed mentions successfully",
+    at: mentionedUsers,
+    from: message,
+    to: email,
 });
+})
 
 // Start server
 app.listen(3200, () => {

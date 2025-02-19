@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const axios = require("axios");
 const port = process.env.PORT || 3200;
 const cors = require("cors");
+const e = require("express");
 const app = express();
 
 //Middlewares...
@@ -113,7 +114,7 @@ app.get('/integration.json', (req, res) => {
 app.route("/telex-target")
 .post(async (req, res) => {
   const { message, settings } = req.body; // Extract message data
-  log.message = message;
+  
 
   if (!message) return res.status(400).json({message: "No message received"});
 
@@ -122,9 +123,10 @@ app.route("/telex-target")
   
   for (let mention of mentionedUsers) {
     const email = mention.replace("@", "");
-
+    
     if (email) {
       try {
+        log.message = email;
         let info = await transporter.sendMail({
           from: "earforsound@gmail.com",
           to: email,

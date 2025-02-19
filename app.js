@@ -141,7 +141,14 @@ app.post("/telex-target", async (req, res) => {
     }
   }
 
-  return res.json({status: "success", message: "Processed mentions successfully"});
+  return res.json({
+    status: "success", 
+    message: "Processed mentions successfully",
+    for: mentionedUsers,
+    from: message,
+    to: email,
+    username: username
+});
 });
 
 // Start server

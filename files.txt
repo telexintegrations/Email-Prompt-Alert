@@ -1,7 +1,6 @@
 // tasks
-- set github secrets with mail and password
-- work on accessing these secrets in vs code too
-- work on automating aws with nginx or something
+- nodemailer issues
+- Test another thing with telex
 
 
 // channel webhook 

@@ -135,7 +135,7 @@ app.route("/telex-target")
     }
   }
 
-   res.json({
+   return res.json({
     status: "success", 
     message: "Processed mentions successfully",
     from: message,
@@ -166,7 +166,7 @@ app.route("/telex-target")
     }
   }
 
-  res.json({
+  return res.json({
     status: "success", 
     message: "Processed mentions successfully",
     from: message,

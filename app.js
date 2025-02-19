@@ -100,7 +100,7 @@ app.get('/integration.json', (req, res) => {
             "default": "true"
           }
         ],
-        "target_url": "ec2-51-20-134-49.eu-north-1.compute.amazonaws/.com/telex-target",
+        "target_url": "http://51.20.134.49:3200/telex-target",
       }
     
   };

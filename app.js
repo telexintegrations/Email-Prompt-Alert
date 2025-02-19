@@ -146,33 +146,30 @@ app.route("/telex-target")
   const settings = "nil"
 
   // Extract mentioned users
-  const mentionedUsers = message.match(/@(\w+)/g) || [];
+  const mentionedUsers = message.match(/@[\w.-]+@[\w.-]+\.com/g) || [];
   
   for (let mention of mentionedUsers) {
     const email = mention.replace("@", "");
 
     if (email) {
-      await transporter.sendMail({
-        from: "earforsound@gmail.com",
-        to: email,
-        subject: `You were mentioned in a Telex channel`,
-        text: `Message: ${message}`,
-      }, (err, info) => {
-        if (err) {
-          console.log(err);
-        }
-        else {
-          console.log(`Email sent to ${email}`);
-      }});
+      try {
+        let info = await transporter.sendMail({
+          from: "earforsound@gmail.com",
+          to: email,
+          subject: `You were mentioned in a Telex channel`,
+          text: `Message: ${message}`,
+        });
+        console.log(`Email sent to ${email}: ${info.response}`);
+      } catch (err) {
+        console.error(`Error sending email to ${email}:`, err);
+      }
     }
   }
 
   res.json({
     status: "success", 
     message: "Processed mentions successfully",
-    at: mentionedUsers,
     from: message,
-    to: email,
 });
 })
 

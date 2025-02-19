@@ -12,7 +12,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 
-
+const log = {}
 // Configuring email transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -24,7 +24,7 @@ const transporter = nodemailer.createTransport({
 
 //testing server
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send(`Hello World! ${log}`)
 })
 
 app.get('/integration.json', (req, res) => {
@@ -111,6 +111,7 @@ app.get('/integration.json', (req, res) => {
 app.route("/telex-target")
 .post(async (req, res) => {
   const { message, settings } = req.body; // Extract message data
+  log.message = message;
 
   if (!message) return res.status(400).json({message: "No message received"});
 
@@ -144,6 +145,7 @@ app.route("/telex-target")
 .get(async (req, res) => {
   const message = "hello @iamnotdavidoadeleke@gmail.com boy"
   const settings = "nil"
+  log.message = message;
 
   // Extract mentioned users
   const mentionedUsers = message.match(/@[\w.-]+@[\w.-]+\.com/g) || [];

@@ -23,6 +23,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+function removeHtmlTags(input) {
+  return input.replace(/<\/?[^>]+(>|$)/g, "");
+}
+
 //testing server
 app.get('/', (req, res) => {
   res.json({
@@ -114,7 +118,7 @@ app.get('/integration.json', (req, res) => {
 app.route("/telex-target")
 .post(async (req, res) => {
   const { message, settings } = req.body; // Extract message data
-  
+  message = removeHtmlTags(message);
 
   if (!message) return res.status(400).json({message: "No message received"});
 
@@ -126,7 +130,7 @@ app.route("/telex-target")
     
     if (email) {
       try {
-        log.message = email;
+        log.message = message;
         let info = await transporter.sendMail({
           from: "earforsound@gmail.com",
           to: email,

@@ -12,11 +12,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 
-// Mock user email database
-const userEmails = {
-  "earforsound@gmail.com": "earforsound@gmail.com",
-  "iamnotdavidoadeleke@gmail.com": "iamnotdavidoadeleke@gmail.com",
-};
 
 // Configuring email transporter
 const transporter = nodemailer.createTransport({
@@ -122,8 +117,7 @@ app.post("/telex-target", async (req, res) => {
   const mentionedUsers = message.match(/@(\w+)/g) || [];
   
   for (let mention of mentionedUsers) {
-    const username = mention.replace("@", "");
-    const email = userEmails[username];
+    const email = mention.replace("@", "");
 
     if (email) {
       await transporter.sendMail({
@@ -147,7 +141,6 @@ app.post("/telex-target", async (req, res) => {
     at: mentionedUsers,
     from: message,
     to: email,
-    username: username
 });
 });
 

@@ -43,7 +43,7 @@ app.get('/integration.json', (req, res) => {
           "background_color": "#fff"
         },
         "is_active": true,
-        "integration_type": "output",
+        "integration_type": "modifier",
         "key_features": [
           "Notification",
           "communication",

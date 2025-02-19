@@ -132,13 +132,15 @@ app.route("/telex-target")
       } catch (err) {
         console.error(`Error sending email to ${email}:`, err);
       }
+      return res.json({
+        status: "success", 
+        message: "Processed mentions successfully",
+        from: message,
+    });
     }
   }
 
-   return res.json({
-    status: "success", 
-    message: message,
-});
+
 })
 .get(async (req, res) => {
   const message = "hello @iamnotdavidoadeleke@gmail.com boy"

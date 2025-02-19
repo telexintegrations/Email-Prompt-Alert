@@ -130,7 +130,7 @@ app.route("/telex-target")
     
     if (email) {
       try {
-        log.message = message;
+        log.message = email;
         let info = await transporter.sendMail({
           from: "earforsound@gmail.com",
           to: email,

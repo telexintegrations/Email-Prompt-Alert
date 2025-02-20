@@ -164,6 +164,7 @@ app.route("/telex-target")
     const email = mention.replace("@", "");
 
     if (email) {
+      console.log(email)
       try {
           await transporter.sendMail({
           from: "earforsound@gmail.com",

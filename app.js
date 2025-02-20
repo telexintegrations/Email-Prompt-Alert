@@ -74,7 +74,7 @@ async function createTransporter() {
   }
 }
 
-const transporter = await createTransporter();
+const transporter = createTransporter();
 
 
 //testing server

@@ -1,6 +1,5 @@
 // tasks
 - nodemailer issues
-- Test another thing with telex
 
 
 // channel webhook 

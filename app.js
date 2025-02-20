@@ -17,6 +17,9 @@ const log = {}
 // Configuring email transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -130,13 +133,13 @@ app.route("/telex-target")
     if (email) {
       try {
         log.message = removeHtmlTags(message);
-        let info = await transporter.sendMail({
+          await transporter.sendMail({
           from: "earforsound@gmail.com",
           to: email,
           subject: `You were mentioned in a Telex channel`,
           text: `Message: ${removeHtmlTags(message)}`,
         });
-        console.log(`Email sent to ${email}: ${info.response}`);
+        console.log(`Email sent to ${email}`);
       } catch (err) {
         console.error(`Error sending email to ${email}:`, err);
       }
@@ -162,7 +165,7 @@ app.route("/telex-target")
 
     if (email) {
       try {
-        let info = await transporter.sendMail({
+          await transporter.sendMail({
           from: "earforsound@gmail.com",
           to: email,
           subject: `You were mentioned in a Telex channel`,

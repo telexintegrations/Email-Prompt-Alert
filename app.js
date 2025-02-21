@@ -13,6 +13,8 @@ const allowedOrigins = [
   "https://staging.telex.im",
   "http://telextest.im",
   "http://staging.telextest.im",
+  "https://ping.telex.im",
+  "http://ping.telex.im",
 ];
 
 app.use(
@@ -118,41 +120,6 @@ app.get('/integration.json', (req, res) => {
         "integration_category": "Email & Messaging",
         "author": "Shy programmer",
         "settings": [
-          {
-            "label": "Trigger event",
-            "type": "dropdown",
-            "required": true,
-            "default": "message_posted",
-            "options": [
-              "message_posted",
-              "channel_updated",
-              "user_mentioned"
-            ]
-          },
-          {
-            "label": "message",
-            "type": "text",
-            "required": true,
-            "default": ""
-          },
-          {
-            "label": "Sender",
-            "type": "text",
-            "required": true,
-            "default": ""
-          },
-          {
-            "label": "Channel",
-            "type": "text",
-            "required": true,
-            "default": ""
-          },
-          {
-            "label": "Mentions",
-            "type": "text",
-            "required": true,
-            "default": ""
-          },
           {
             "label": "Enable Email Notifications",
             "type": "checkbox",

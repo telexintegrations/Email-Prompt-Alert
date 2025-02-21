@@ -81,7 +81,7 @@ async function createTransporter() {
 
 //testing server
 app.get('/', (req, res) => {
-  res.send("Hello Telex User! This is the Email Prompt integration server");
+  res.send("Hello Telex User! This is the Email Prompt integration server" + `current access token: ${accessToken.token}`);
 })
 
 // Integration endpoint to provide integration details to Telex

@@ -55,7 +55,6 @@ async function createTransporter() {
   try {
 
     const accessToken = await oAuth2Client.getAccessToken(); // Automatically refresh token
-    console.log(accessToken.token)
     if (!accessToken.token) {
       throw new Error("Failed to retrieve access token");
     }

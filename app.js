@@ -178,7 +178,6 @@ app.post("/telex-target", async (req, res) => {
     
     if (email) {
       try {
-        log.message = removeHtmlTags(message);
           transporter.sendMail({
           from: "earforsound@gmail.com",
           to: email,

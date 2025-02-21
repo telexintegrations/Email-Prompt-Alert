@@ -57,6 +57,7 @@ async function createTransporter() {
     return nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",
+      scope: "https://mail.google.com/",
       port: 587,
       secure: false,
       auth: {

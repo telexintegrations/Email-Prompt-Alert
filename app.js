@@ -76,7 +76,7 @@ async function createTransporter() {
   }
 }
 
-const transporter = createTransporter();
+
 
 
 //testing server
@@ -177,6 +177,7 @@ app.post("/telex-target", async (req, res) => {
     const email = mention.replace("@", "");
     
     if (email) {
+      const transporter = await createTransporter();
       try {
           transporter.sendMail({
           from: "earforsound@gmail.com",

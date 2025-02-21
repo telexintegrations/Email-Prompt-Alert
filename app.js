@@ -31,25 +31,11 @@ app.use(
 app.use(bodyParser.json());
 app.use(express.json());
 
-// Configuring email transporter
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  scope: 'https://mail.google.com',
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    type: "OAuth2",
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    accessToken: process.env.ACCESS_TOKEN,
-    refreshToken: process.env.REFRESH_TOKEN,
-  },
-});
-
+// Parsing Telex messages
 function removeHtmlTags(input) {
+  return input.replace(/<\/?[^>]+(>|$)/g, "");
+}
+
 // Configuring email transporter
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;

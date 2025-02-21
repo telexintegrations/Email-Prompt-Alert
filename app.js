@@ -66,6 +66,7 @@ async function createTransporter() {
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
         refreshToken: REFRESH_TOKEN,
+        grantType: "refresh_token",
         accessToken: accessToken.token,
       },
     });

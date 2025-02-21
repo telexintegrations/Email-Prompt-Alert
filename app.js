@@ -83,10 +83,10 @@ async function createTransporter() {
 
 
 
-
+let log;
 //testing server
 app.get('/', (req, res) => {
-  res.send("Hello Telex User! This is the Email Prompt integration server");
+  res.send(`Hello Telex User! This is the Email Prompt integration server Here: ${log}`);
 })
 
 // Integration endpoint to provide integration details to Telex
@@ -136,7 +136,8 @@ app.get('/integration.json', (req, res) => {
 
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
-  const { message, settings } = req.body; // Extract message data
+  const { message } = req.body; // Extract message data
+  const log = req.body;
 
   if (!message) return res.status(400).json({message: "No message received"});
 

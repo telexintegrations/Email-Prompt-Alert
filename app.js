@@ -137,7 +137,8 @@ app.get('/integration.json', (req, res) => {
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
   const { message } = req.body; // Extract message data
-  log = req.body;
+  console.log(req.body);
+  log = req.body
 
   if (!message) return res.status(400).json({message: "No message received"});
 

@@ -54,6 +54,9 @@ oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 async function createTransporter() {
   try {
     const accessToken = await oAuth2Client.getAccessToken(); // Automatically refresh token
+    if (!accessToken.token) {
+      throw new Error("Failed to retrieve access token");
+    }
     return nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",
@@ -66,7 +69,6 @@ async function createTransporter() {
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
         refreshToken: REFRESH_TOKEN,
-        grantType: "refresh_token",
         accessToken: accessToken.token,
       },
     });
@@ -178,6 +180,10 @@ app.post("/telex-target", async (req, res) => {
     
     if (email) {
       const transporter = await createTransporter();
+      if (!transporter) {
+        console.error(`Failed to create transporter. Skipping email to ${email}`);
+        continue; // Skip this iteration if transporter is null
+      }
       try {
           transporter.sendMail({
           from: "earforsound@gmail.com",

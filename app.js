@@ -1,19 +1,36 @@
 require("dotenv").config();
+const {google} = require("googleapis");
 const express = require("express");
 const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
-const axios = require("axios");
-const port = process.env.PORT || 3200;
+const port = process.env.PORT || 3000;
 const cors = require("cors");
-const e = require("express");
 const app = express();
 
 //Middlewares...
-app.use(cors());
+const allowedOrigins = [
+  "https://telex.im",
+  "https://staging.telex.im",
+  "http://telextest.im",
+  "http://staging.telextest.im",
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(bodyParser.json());
 app.use(express.json());
 
-const log = {}
 // Configuring email transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -33,16 +50,53 @@ const transporter = nodemailer.createTransport({
 });
 
 function removeHtmlTags(input) {
-  return input.replace(/<\/?[^>]+(>|$)/g, "");
+// Configuring email transporter
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = "https://developers.google.com/oauthplayground";
+const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
+
+//Creating OAuth2 clientto ensure access token is continuousl refreshed
+const oAuth2Client = new google.auth.OAuth2(
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REDIRECT_URI
+);
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+
+async function createTransporter() {
+  try {
+    const accessToken = await oAuth2Client.getAccessToken(); // Automatically refresh token
+    return nodemailer.createTransport({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        type: "OAuth2",
+        user: process.env.EMAIL_USER,
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: accessToken.token,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to refresh access token:", error);
+    return null;
+  }
 }
+
+const transporter = createTransporter();
+
 
 //testing server
 app.get('/', (req, res) => {
-  res.json({
-    message: `Hello World!`,
-    new: log.message})
+  res.send("Hello Telex User! This is the Email Prompt integration server");
 })
 
+// Integration endpoint to provide integration details to Telex
 app.get('/integration.json', (req, res) => {
   const integration = {
       "data": {
@@ -123,8 +177,7 @@ app.get('/integration.json', (req, res) => {
 });
 
 // Webhook endpoint to receive messages from Telex
-app.route("/telex-target")
-.post(async (req, res) => {
+app.post("/telex-target", async (req, res) => {
   const { message, settings } = req.body; // Extract message data
 
   if (!message) return res.status(400).json({message: "No message received"});
@@ -138,7 +191,7 @@ app.route("/telex-target")
     if (email) {
       try {
         log.message = removeHtmlTags(message);
-          await transporter.sendMail({
+          transporter.sendMail({
           from: "earforsound@gmail.com",
           to: email,
           subject: `You were mentioned in a Telex channel`,
@@ -157,39 +210,7 @@ app.route("/telex-target")
     from: message,
 });
 })
-.get(async (req, res) => {
-  const message = "hello @iamnotdavidoadeleke@gmail.com boy"
-  const settings = "nil"
-  log.message = message;
 
-  // Extract mentioned users
-  const mentionedUsers = message.match(/@[\w.-]+@[\w.-]+\.com/g) || [];
-  
-  for (let mention of mentionedUsers) {
-    const email = mention.replace("@", "");
-
-    if (email) {
-      console.log(email)
-      try {
-          await transporter.sendMail({
-          from: "earforsound@gmail.com",
-          to: email,
-          subject: `You were mentioned in a Telex channel`,
-          text: `Message: ${message}`,
-        });
-        console.log(`Email sent to ${email}: ${info.response}`);
-      } catch (err) {
-        console.error(`Error sending email to ${email}:`, err);
-      }
-    }
-  }
-
-  return res.json({
-    status: "success", 
-    message: "Processed mentions successfully",
-    from: message,
-});
-})
 
 // Start server
 app.listen(3200, () => {

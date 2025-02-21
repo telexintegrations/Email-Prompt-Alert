@@ -17,6 +17,7 @@ const log = {}
 // Configuring email transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
+  scope: 'https://mail.google.com',
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
@@ -43,7 +44,6 @@ app.get('/', (req, res) => {
 })
 
 app.get('/integration.json', (req, res) => {
-  const baseUrl = `${req.protocol}://${req.get("host")}`;
   const integration = {
       "data": {
         "date": {

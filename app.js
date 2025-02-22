@@ -24,7 +24,10 @@ async function getUserEmail(channelId, mentionedUser) {
       const users = response.data.data;
       
       // Find the mentioned user's email
-      const matchedUser = users.find(user => user.profile?.full_name?.trim() === mentionedUser);
+      const matchedUser = users.find(user => {
+        console.log(user.profile?.full_name?.trim(), mentionedUser);
+        return  (user.profile?.full_name?.trim() === mentionedUser) || (user.profile?.username?.trim() === mentionedUser) || (user.email?.trim() === mentionedUser) || (user.profile?.username?.trim() === mentionedUser)
+        });
 
       if (matchedUser) {
           return matchedUser.email; // Return email of the mentioned user

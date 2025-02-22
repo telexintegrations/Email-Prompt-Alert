@@ -187,7 +187,7 @@ if (!mentionMatch) {
     return res.status(400).json({ error: 'No @mention found in message' });
 }
 
-const mentionedUser = mentionMatch[1]; // Extract the username from @mention
+const mentionedUser = mentionMatch; // Extract the username from @mention
 for (let mention of mentionedUser) {
   const username = (mention.replace("@", "")).trim;
 

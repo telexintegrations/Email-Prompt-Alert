@@ -150,7 +150,7 @@ app.get('/integration.json', (req, res) => {
           }
         } ,
         "integration_category": "Email & Messaging",
-        "author": "Shy programmer",
+        "author": "Abdulazeez Arowolo",
         "settings": [
           {
             "label": "Enable Email Notifications",

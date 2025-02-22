@@ -176,7 +176,7 @@ app.get('/integration.json', (req, res) => {
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
   const { message, settings } = req.body; // Extract message data
-  const channelIdSetting = setting.label === "channel_id";
+  const channelIdSetting = settings.label === "channel_id";
   const channelId = channelIdSetting ? channelIdSetting.value : null;
 
 

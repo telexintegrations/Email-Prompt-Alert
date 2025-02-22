@@ -182,6 +182,6 @@ app.post("/telex-target", async (req, res) => {
 
 
 // Start server
-app.listen(3200, () => {
+app.listen(process.env.PORT || 3200, () => {
   console.log(`Server running on port ${port}`);
 });

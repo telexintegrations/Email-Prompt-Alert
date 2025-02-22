@@ -191,10 +191,11 @@ if (mentionedUser.length === 0) {
 
 for (let mention of mentionedUser) {
   const username = mention.replace("@", "").trim();
+  console.log(`Mentioned user: ${username}`);
 
 // Get user's email from the channel
 const email = await getUserEmail(channelId, username);
-mailed.push(email);
+console.log(`Mentioned Email: ${email}`);
     if (email) {
       const transporter = await createTransporter();
       if (!transporter) {
@@ -214,7 +215,6 @@ mailed.push(email);
       }
     }
   }
-  console.log(`Emails sent to ${mailed}`);
 
    return res.json({
     status: "success", 

@@ -22,6 +22,7 @@ async function getUserEmail(channelId, mentionedUser) {
       const response = await apiClient.get(`/channels/${channelId}/users`);
 
       const users = response.data.users;
+      console.log('MY CHANNEL Users:', users);
       
       // Find the mentioned user's email
       const matchedUser = users.find(user => user.profile?.full_name?.trim() === mentionedUser);

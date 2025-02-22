@@ -188,7 +188,7 @@ if (!mentionMatch) {
 }
 
 const mentionedUser = mentionMatch[1]; // Extract the username from @mention
-for (let mention of mentionedUsers) {
+for (let mention of mentionedUser) {
   const username = (mention.replace("@", "")).trim;
 
 // Get user's email from the channel

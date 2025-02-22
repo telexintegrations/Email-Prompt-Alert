@@ -24,7 +24,7 @@ async function getUserEmail(channelId, mentionedUser) {
       const users = response.data.data;
       
       // Find the mentioned user's email
-      const matchedUser = users.find(user => user.profile.full_name === mentionedUser);
+      const matchedUser = users.find(user => user.profile?.full_name?.trim() === mentionedUser);
 
       if (matchedUser) {
           return matchedUser.email; // Return email of the mentioned user
@@ -176,7 +176,8 @@ app.get('/integration.json', (req, res) => {
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
   const { message, settings } = req.body; // Extract message data
-  const channelId = settings.label === "channel_id" ? settings.value: null // Extract channel ID from settings
+  const channelIdSetting = settings.find(setting => setting.label === "channel_id");
+  const channelId = channelIdSetting ? channelIdSetting.value : null;
 
 
   let mailed = []
@@ -184,17 +185,16 @@ app.post("/telex-target", async (req, res) => {
     return res.status(400).json({ error: 'channelId (in settings) and message sent are required' });
 }
 
-const mentionMatch = message.match(/@(\w+)/g) || []; // Match @mention in message
-if (!mentionMatch) {
+const mentionedUser = message.match(/@(\w+)/g) || []; // Match @mention in message
+if (mentionedUser.length === 0) {
     return res.status(400).json({ error: 'No @mention found in message' });
 }
 
-const mentionedUser = mentionMatch; // Extract the username from @mention
 for (let mention of mentionedUser) {
-  const username = (mention.replace("@", "")).trim;
+  const username = mention.replace("@", "").trim();
 
 // Get user's email from the channel
-const email = await getUserEmail(channelId, mentionedUser);
+const email = await getUserEmail(channelId, username);
 mailed.push(email);
     if (email) {
       const transporter = await createTransporter();
@@ -203,7 +203,7 @@ mailed.push(email);
         continue; // Skip this iteration if transporter is null
       }
       try {
-          transporter.sendMail({
+          await transporter.sendMail({
           from: "earforsound@gmail.com",
           to: email,
           subject: `You were mentioned in a Telex channel`,

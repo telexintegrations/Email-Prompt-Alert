@@ -22,7 +22,6 @@ async function getUserEmail(channelId, mentionedUser) {
       const response = await apiClient.get(`/channels/${channelId}/users`);
 
       const users = response.data.data;
-      console.log('MY CHANNEL Users:', users);
       
       // Find the mentioned user's email
       const matchedUser = users.find(user => user.profile?.full_name?.trim() === mentionedUser);
@@ -176,7 +175,6 @@ app.get('/integration.json', (req, res) => {
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
   const { message, settings } = req.body; // Extract message data
-  console.log("Received settings:", settings);
   const channelIdSetting = settings?.find(setting => setting.label === "channel_id");
   const channelId = channelIdSetting ? channelIdSetting.default : null;
 
@@ -216,6 +214,7 @@ mailed.push(email);
       }
     }
   }
+  console.log(`Emails sent to ${mailed}`);
 
    return res.json({
     status: "success", 

@@ -133,7 +133,7 @@ app.get('/integration.json', (req, res) => {
           "app_name": "Email Prompt alert",
           "app_description": "This integration helps further notifying a user via email whenever they are @mentioned",
           "app_logo": "https://logowik.com/content/uploads/images/513_email.jpg",
-          "app_url": "https://email-prompt.onrender.com/",
+          "app_url": "https://email-prompt-alert.onrender.com/",
           "background_color": "#fff"
         },
         "is_active": true,
@@ -165,7 +165,7 @@ app.get('/integration.json', (req, res) => {
             "default": "#12345"
           }
         ],
-        "target_url": "https://email-prompt.onrender.com/telex-target",
+        "target_url": "https://email-prompt-alert.onrender.com/telex-target",
               }
     
   };

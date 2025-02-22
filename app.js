@@ -134,7 +134,6 @@ app.get('/integration.json', (req, res) => {
           }
         ],
         "target_url": "http://51.20.134.49:3200/telex-target",
-        "tick_url": "http://51.20.134.49:3200/"
       }
     
   };
@@ -175,7 +174,7 @@ app.post("/telex-target", async (req, res) => {
 
    return res.json({
     status: "success", 
-    message: "Processed mentions successfully",
+    message: "Email sent successfully",
     from: message,
 });
 })

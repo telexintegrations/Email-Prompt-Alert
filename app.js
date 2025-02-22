@@ -86,7 +86,7 @@ async function createTransporter() {
 let log;
 //testing server
 app.get('/', (req, res) => {
-  res.send(`Hello Telex User! This is the Email Prompt integration server Here: ${log}`);
+  res.send(`Hello Telex User! This is the Email Prompt integration server`);
 })
 
 // Integration endpoint to provide integration details to Telex
@@ -98,7 +98,7 @@ app.get('/integration.json', (req, res) => {
           "updated_at": "2025-02-17"
         },
         "descriptions": {
-          "app_name": "Email Prompt",
+          "app_name": "Email Prompt 2",
           "app_description": "This integration helps further notifying a user via email whenever they are @mentioned",
           "app_logo": "https://logowik.com/content/uploads/images/513_email.jpg",
           "app_url": "ec2-51-20-134-49.eu-north-1.compute.amazonaws.com",
@@ -125,9 +125,16 @@ app.get('/integration.json', (req, res) => {
             "type": "checkbox",
             "required": true,
             "default": "true"
+          },
+          {
+            "label": "channel_id",
+            "type": "text",
+            "required": true,
+            "default": "#12345"
           }
         ],
         "target_url": "http://51.20.134.49:3200/telex-target",
+        "tick_url": "http://51.20.134.49:3200/"
       }
     
   };
@@ -137,8 +144,6 @@ app.get('/integration.json', (req, res) => {
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
   const { message } = req.body; // Extract message data
-  console.log(req.body);
-  log = req.body
 
   if (!message) return res.status(400).json({message: "No message received"});
 

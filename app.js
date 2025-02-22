@@ -5,7 +5,16 @@ const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 const port = process.env.PORT || 3000;
 const cors = require("cors");
+const { default: axios } = require("axios");
 const app = express();
+
+const apiClient = axios.create({
+  baseURL: 'https://api.telex.im/api/v1', // Replace with actual API base URL
+  headers: {
+      Authorization: `Bearer ${process.env.AUTH_CODE}` // Token from .env
+  }
+});
+
 
 //Middlewares...
 const allowedOrigins = [
@@ -143,16 +152,29 @@ app.get('/integration.json', (req, res) => {
 
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
-  const { message } = req.body; // Extract message data
+  const { message, settings } = req.body; // Extract message data
 
   if (!message) return res.status(400).json({message: "No message received"});
 
   // Extract mentioned users
-  const mentionedUsers = message.match(/@[\w.-]+@[\w.-]+\.com/g) || [];
+  /*const mentionedUsers = message.match(/@[\w.-]+@[\w.-]+\.com/g) || [];
+
+
   
   for (let mention of mentionedUsers) {
-    const email = mention.replace("@", "");
+    const email = mention.replace("@", "");*/
     
+    const channel_id = settings.channel_id;
+    const mentionedUsers = message.match(/@\w+/g) || [];
+
+    for (let mention of mentionedUsers) {
+      const username = mention.replace("@", "");
+      const users = await apiClient.get(`/channels/${channel_id}/users`) || [];
+
+    }
+    
+    
+
     if (email) {
       const transporter = await createTransporter();
       if (!transporter) {

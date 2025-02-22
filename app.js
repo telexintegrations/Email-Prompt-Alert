@@ -178,6 +178,8 @@ app.post("/telex-target", async (req, res) => {
   const { message, settings } = req.body; // Extract message data
   const channelId = settings.label === "channel_id" ? settings.value: null // Extract channel ID from settings
 
+
+  let mailed = []
   if (!channelId || !message) {
     return res.status(400).json({ error: 'channelId (in settings) and message sent are required' });
 }
@@ -193,7 +195,7 @@ for (let mention of mentionedUser) {
 
 // Get user's email from the channel
 const email = await getUserEmail(channelId, mentionedUser);
-
+mailed.push(email);
     if (email) {
       const transporter = await createTransporter();
       if (!transporter) {
@@ -216,8 +218,8 @@ const email = await getUserEmail(channelId, mentionedUser);
 
    return res.json({
     status: "success", 
-    message: "Processed mentions successfully",
-    from: message,
+    message: "Emails sent successfully",
+    to: mailed,
 });
 })
 

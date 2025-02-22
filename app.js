@@ -5,7 +5,41 @@ const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 const port = process.env.PORT || 3000;
 const cors = require("cors");
+const { default: axios } = require("axios");
 const app = express();
+
+const apiClient = axios.create({
+  baseURL: 'https://api.telex.im/api/v1', // Replace with actual API base URL
+  headers: {
+      Authorization: `Bearer ${process.env.AUTH_CODE}` // Token from .env
+  }
+});
+
+
+async function getUserEmail(channelId, mentionedUser) {
+  try {
+      // Fetch users in the channel
+      const response = await apiClient.get(`/channels/${channelId}/users`);
+
+      const users = response.data.data;
+      
+      // Find the mentioned user's email
+      const matchedUser = users.find(user => {
+        firstFull = user.profile?.full_name?.split(" ")[0]
+        return  (firstFull === mentionedUser || user.username === mentionedUser);});
+
+      if (matchedUser) {
+          return matchedUser.email; // Return email of the mentioned user
+      } else {
+          return null; // No matching user found
+      }
+  } catch (error) {
+      console.error('Error fetching users:', error.response ? error.response.data : error.message);
+      throw new Error('Failed to retrieve users');
+  }
+}
+
+
 
 //Middlewares...
 const allowedOrigins = [
@@ -82,8 +116,6 @@ async function createTransporter() {
 }
 
 
-
-let log;
 //testing server
 app.get('/', (req, res) => {
   res.send(`Hello Telex User! This is the Email Prompt integration server`);
@@ -94,14 +126,14 @@ app.get('/integration.json', (req, res) => {
   const integration = {
       "data": {
         "date": {
-          "created_at": "2025-02-17",
-          "updated_at": "2025-02-17"
+          "created_at": "2025-02-22",
+          "updated_at": "2025-02-22"
         },
         "descriptions": {
-          "app_name": "Email Prompter",
+          "app_name": "Email Prompt alert",
           "app_description": "This integration helps further notifying a user via email whenever they are @mentioned",
           "app_logo": "https://logowik.com/content/uploads/images/513_email.jpg",
-          "app_url": "ec2-51-20-134-49.eu-north-1.compute.amazonaws.com",
+          "app_url": "https://email-prompt.onrender.com/",
           "background_color": "#fff"
         },
         "is_active": true,
@@ -118,7 +150,7 @@ app.get('/integration.json', (req, res) => {
           }
         } ,
         "integration_category": "Email & Messaging",
-        "author": "Abdulazeez Arowolo",
+        "author": "Shy programmer",
         "settings": [
           {
             "label": "Enable Email Notifications",
@@ -133,8 +165,8 @@ app.get('/integration.json', (req, res) => {
             "default": "#12345"
           }
         ],
-        "target_url": "http://51.20.134.49:3200/telex-target",
-      }
+        "target_url": "https://email-prompt.onrender.com/telex-target",
+              }
     
   };
   res.json(integration);
@@ -142,16 +174,24 @@ app.get('/integration.json', (req, res) => {
 
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
-  const { message } = req.body; // Extract message data
+  const { message, settings } = req.body; // Extract message data
+  const channelIdSetting = settings?.find(setting => setting.label === "channel_id");
+  const channelId = channelIdSetting ? channelIdSetting.default : null;
 
-  if (!message) return res.status(400).json({message: "No message received"});
+  if (!channelId || !message) {
+    return res.status(400).json({ error: 'channelId (in settings) and message sent are required' });
+}
 
-  // Extract mentioned users
-  const mentionedUsers = message.match(/@[\w.-]+@[\w.-]+\.com/g) || [];
-  
-  for (let mention of mentionedUsers) {
-    const email = mention.replace("@", "");
-    
+const mentionedUser = message.match(/@(\w+)/g) || []; // Match @mention in message
+if (mentionedUser.length === 0) {
+    return res.status(400).json({ error: 'No @mention found in message' });
+}
+
+for (let mention of mentionedUser) {
+  const username = mention.replace("@", "").trim();
+
+// Get user's email from the channel
+const email = await getUserEmail(channelId, username);
     if (email) {
       const transporter = await createTransporter();
       if (!transporter) {
@@ -159,7 +199,7 @@ app.post("/telex-target", async (req, res) => {
         continue; // Skip this iteration if transporter is null
       }
       try {
-          transporter.sendMail({
+          await transporter.sendMail({
           from: "earforsound@gmail.com",
           to: email,
           subject: `You were mentioned in a Telex channel`,
@@ -174,8 +214,7 @@ app.post("/telex-target", async (req, res) => {
 
    return res.json({
     status: "success", 
-    message: "Email sent successfully",
-    from: message,
+    message: "Emails sent successfully"
 });
 })
 

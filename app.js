@@ -26,9 +26,7 @@ async function getUserEmail(channelId, mentionedUser) {
       // Find the mentioned user's email
       const matchedUser = users.find(user => {
         firstFull = user.profile?.full_name?.split(" ")[0]
-        console.log(user.profile?.full_name?.trim(), mentionedUser);
-        return  (firstFull === mentionedUser || user.profile?.full_name?.trim() === mentionedUser) || (user.profile?.username?.trim() === mentionedUser) || (user.email?.trim() === mentionedUser) || (user.profile?.username?.trim() === mentionedUser)
-        });
+        return  (firstFull === mentionedUser || user.username === mentionedUser);});
 
       if (matchedUser) {
           return matchedUser.email; // Return email of the mentioned user
@@ -118,8 +116,6 @@ async function createTransporter() {
 }
 
 
-
-let log;
 //testing server
 app.get('/', (req, res) => {
   res.send(`Hello Telex User! This is the Email Prompt integration server`);
@@ -130,14 +126,14 @@ app.get('/integration.json', (req, res) => {
   const integration = {
       "data": {
         "date": {
-          "created_at": "2025-02-17",
-          "updated_at": "2025-02-17"
+          "created_at": "2025-02-22",
+          "updated_at": "2025-02-22"
         },
         "descriptions": {
-          "app_name": "Email Prompt 2",
+          "app_name": "Email Prompt alert",
           "app_description": "This integration helps further notifying a user via email whenever they are @mentioned",
           "app_logo": "https://logowik.com/content/uploads/images/513_email.jpg",
-          "app_url": "ec2-51-20-134-49.eu-north-1.compute.amazonaws.com",
+          "app_url": "https://email-prompt.onrender.com/",
           "background_color": "#fff"
         },
         "is_active": true,
@@ -169,7 +165,7 @@ app.get('/integration.json', (req, res) => {
             "default": "#12345"
           }
         ],
-        "target_url": "https://telex-branch.onrender.com/telex-target",
+        "target_url": "https://email-prompt.onrender.com/telex-target",
               }
     
   };
@@ -182,8 +178,6 @@ app.post("/telex-target", async (req, res) => {
   const channelIdSetting = settings?.find(setting => setting.label === "channel_id");
   const channelId = channelIdSetting ? channelIdSetting.default : null;
 
-
-  let mailed = []
   if (!channelId || !message) {
     return res.status(400).json({ error: 'channelId (in settings) and message sent are required' });
 }
@@ -195,11 +189,9 @@ if (mentionedUser.length === 0) {
 
 for (let mention of mentionedUser) {
   const username = mention.replace("@", "").trim();
-  console.log(`Mentioned user: ${username}`);
 
 // Get user's email from the channel
 const email = await getUserEmail(channelId, username);
-console.log(`Mentioned Email: ${email}`);
     if (email) {
       const transporter = await createTransporter();
       if (!transporter) {
@@ -222,8 +214,7 @@ console.log(`Mentioned Email: ${email}`);
 
    return res.json({
     status: "success", 
-    message: "Emails sent successfully",
-    to: mailed,
+    message: "Emails sent successfully"
 });
 })
 

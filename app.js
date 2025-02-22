@@ -166,8 +166,7 @@ app.get('/integration.json', (req, res) => {
           }
         ],
         "target_url": "https://telex-branch.onrender.com/telex-target",
-        "tick_url": "http://51.20.134.49:3200/"
-      }
+              }
     
   };
   res.json(integration);
@@ -176,6 +175,7 @@ app.get('/integration.json', (req, res) => {
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
   const { message, settings } = req.body; // Extract message data
+  console.log("Received settings:", settings);
   const channelIdSetting = settings?.find(setting => setting.label === "channel_id");
   const channelId = channelIdSetting ? channelIdSetting.default : null;
 

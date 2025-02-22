@@ -16,6 +16,29 @@ const apiClient = axios.create({
 });
 
 
+async function getUserEmail(channelId, mentionedUser) {
+  try {
+      // Fetch users in the channel
+      const response = await apiClient.get(`/channels/${channelId}/users`);
+
+      const users = response.data.data;
+      
+      // Find the mentioned user's email
+      const matchedUser = users.find(user => user.full_name === mentionedUser);
+
+      if (matchedUser) {
+          return matchedUser.email; // Return email of the mentioned user
+      } else {
+          return null; // No matching user found
+      }
+  } catch (error) {
+      console.error('Error fetching users:', error.response ? error.response.data : error.message);
+      throw new Error('Failed to retrieve users');
+  }
+}
+
+
+
 //Middlewares...
 const allowedOrigins = [
   "https://telex.im",
@@ -153,27 +176,23 @@ app.get('/integration.json', (req, res) => {
 // Webhook endpoint to receive messages from Telex
 app.post("/telex-target", async (req, res) => {
   const { message, settings } = req.body; // Extract message data
+  const channelId = settings.channel_id || "01952aa0-ff45-75cc-a399-fb94542300ac";
 
-  if (!message) return res.status(400).json({message: "No message received"});
+  if (!channelId || !message) {
+    return res.status(400).json({ error: 'channelId (in settings) and message sent are required' });
+}
 
-  // Extract mentioned users
-  /*const mentionedUsers = message.match(/@[\w.-]+@[\w.-]+\.com/g) || [];
+const mentionMatch = message.match(/@(\w+)/g) || []; // Match @mention in message
+if (!mentionMatch) {
+    return res.status(400).json({ error: 'No @mention found in message' });
+}
 
+const mentionedUser = mentionMatch[1]; // Extract the username from @mention
+for (let mention of mentionedUsers) {
+  const username = (mention.replace("@", "")).trim;
 
-  
-  for (let mention of mentionedUsers) {
-    const email = mention.replace("@", "");*/
-    
-    const channel_id = settings.channel_id;
-    const mentionedUsers = message.match(/@\w+/g) || [];
-
-    for (let mention of mentionedUsers) {
-      const username = mention.replace("@", "");
-      const users = await apiClient.get(`/channels/${channel_id}/users`) || [];
-
-    }
-    
-    
+// Get user's email from the channel
+const email = await getUserEmail(channelId, mentionedUser);
 
     if (email) {
       const transporter = await createTransporter();

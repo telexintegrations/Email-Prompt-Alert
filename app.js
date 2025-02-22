@@ -177,7 +177,7 @@ app.get('/integration.json', (req, res) => {
 app.post("/telex-target", async (req, res) => {
   const { message, settings } = req.body; // Extract message data
   const channelIdSetting = settings?.find(setting => setting.label === "channel_id");
-  const channelId = channelIdSetting ? channelIdSetting.value : null;
+  const channelId = channelIdSetting ? channelIdSetting.default : null;
 
 
   let mailed = []

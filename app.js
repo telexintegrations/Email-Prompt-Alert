@@ -165,7 +165,7 @@ app.get('/integration.json', (req, res) => {
             "default": "#12345"
           }
         ],
-        "target_url": "http://51.20.134.49:3200/telex-target",
+        "target_url": "https://telex-branch.onrender.com/telex-target",
         "tick_url": "http://51.20.134.49:3200/"
       }
     

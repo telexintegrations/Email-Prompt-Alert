@@ -98,7 +98,7 @@ app.get('/integration.json', (req, res) => {
           "updated_at": "2025-02-17"
         },
         "descriptions": {
-          "app_name": "Email Prompt 2",
+          "app_name": "Email Prompter",
           "app_description": "This integration helps further notifying a user via email whenever they are @mentioned",
           "app_logo": "https://logowik.com/content/uploads/images/513_email.jpg",
           "app_url": "ec2-51-20-134-49.eu-north-1.compute.amazonaws.com",
@@ -118,7 +118,7 @@ app.get('/integration.json', (req, res) => {
           }
         } ,
         "integration_category": "Email & Messaging",
-        "author": "Shy programmer",
+        "author": "Abdulazeez Arowolo",
         "settings": [
           {
             "label": "Enable Email Notifications",

@@ -26,7 +26,10 @@ async function getUserEmail(channelId, mentionedUser) {
       // Find the mentioned user's email
       const matchedUser = users.find(user => {
         firstFull = user.profile?.full_name?.split(" ")[0]
-        return  (firstFull === mentionedUser || user.username === mentionedUser);});
+        firstUser = user.username?.split(" ")[0]
+        firstMail = user.email?.split("@")[0]
+
+        return  (firstFull === mentionedUser || firstMail === mentionedUser || firstUser === mentionedUser);});
 
       if (matchedUser) {
           return matchedUser.email; // Return email of the mentioned user
